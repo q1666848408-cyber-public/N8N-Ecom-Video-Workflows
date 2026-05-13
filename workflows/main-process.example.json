@@ -1,0 +1,19 @@
+{
+  "name": "Main Process — Source → Analyze → Writeback (showcase)",
+  "nodes": [
+    {
+      "id": "1",
+      "name": "Kalodata Trigger",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "parameters": { "rule": { "interval": [{ "field": "hours", "value": 6 }] } }
+    },
+    {
+      "id": "2",
+      "name": "Fetch Products",
+      "type": "n8n-nodes-base.code",
+      "parameters": { "language": "python" },
+      "_note": "Calls scripts/kalodata_api.py — [actual code not shown]"
+    }
+  ],
+  "_comment": "Showcase only — production workflows have 24 nodes with credentials, branching & error handling not shown here."
+}
