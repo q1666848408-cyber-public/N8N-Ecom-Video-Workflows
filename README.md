@@ -1,91 +1,64 @@
-<div align="center">
+# N8N-Ecom-Video-Workflows
 
-# 🔄 n8n E-Commerce Video Workflows
+![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)
 
-[![n8n](https://img.shields.io/badge/n8n-Self--Hosted-EA4B71?style=flat-square&logo=n8n&logoColor=white)](https://n8n.io)
-[![Docker](https://img.shields.io/badge/Docker-Compose-2496ED?style=flat-square&logo=docker&logoColor=white)](https://docker.com)
-[![Python](https://img.shields.io/badge/Python-3.10+-3776AB?style=flat-square&logo=python&logoColor=white)](https://python.org)
-[![Gemini](https://img.shields.io/badge/Gemini-2.5%20Pro-4285F4?style=flat-square&logo=google&logoColor=white)](https://deepmind.google/gemini)
+> **Showcase** — ~15% skeleton. Core implementation not included.
 
-**24-workflow n8n orchestration for TikTok e-commerce — Kalodata sourcing → competitor scraping → Gemini analysis → Feishu writeback**
+24 n8n workflows automating the TikTok e-commerce video production cycle. Products flow from Kalodata selection through Apify download and Gemini analysis to script generation, with results written back to Feishu Bitable.
 
-> ⚠️ **Showcase Only** — ~15% skeleton. Workflow JSONs, credentials & business logic not included.
+## Stack
 
-</div>
+- n8n (self-hosted, Docker)
+- Python (custom n8n function nodes)
+- Google Gemini API
+- Apify (video download)
+- Kalodata API
+- Feishu (Lark) Bitable API
 
----
-
-## ✨ Overview
-
-A self-hosted n8n instance orchestrates 24 production workflows that cover the full e-commerce content lifecycle: pulling product data from Kalodata, downloading competitor videos via Apify, running Gemini analysis to generate scripts and 6-grid storyboards, then writing everything back into Feishu Bitable.
-
----
-
-## 🏗️ Architecture
+## Workflow Map
 
 ```
-                       ┌──────────────────────┐
-                       │   Kalodata API       │
-                       │   (product sourcing) │
-                       └──────────┬───────────┘
-                                  │
-                                  ▼
-   ┌────────────────────────────────────────────────────┐
-   │            n8n (self-hosted, Docker)               │
-   │                                                    │
-   │   ┌──────────────────────────────────────────┐    │
-   │   │  24 Workflows                            │    │
-   │   │  · Source products from Kalodata         │    │
-   │   │  · Download competitor videos (Apify)    │    │
-   │   │  · 6-grid storyboard generation          │    │
-   │   │  · Gemini AI analysis & prompts          │    │
-   │   │  · Write back to Feishu Bitable          │    │
-   │   └──────────────────────────────────────────┘    │
-   │                                                    │
-   │   ┌──────────────────────────────────────────┐    │
-   │   │  Python Code Nodes                       │    │
-   │   │  · storyboard_generator                  │    │
-   │   │  · kalodata_api                          │    │
-   │   │  · video_analysis_api                    │    │
-   │   └──────────────────────────────────────────┘    │
-   └────────────────────────────────────────────────────┘
-                                  │
-                                  ▼
-                       ┌──────────────────────┐
-                       │   Feishu Bitable     │
-                       │   (final output)     │
-                       └──────────────────────┘
+Kalodata: select top products
+    └── Apify: download reference videos
+         └── Gemini: multimodal video analysis
+              └── Script generator node
+                   └── Feishu Bitable: write results
 ```
 
----
+24 workflows cover distinct sub-tasks: trend fetch, competitor analysis, hook generation, voiceover copy, caption writing, thumbnail prompt, batch processing, and more.
 
-## 📁 Structure
+## Usage
+
+```bash
+# Start n8n via Docker Compose
+docker compose up -d
+
+# Import all workflows
+for f in workflows/*.json; do
+  n8n import:workflow --input="$f"
+done
+
+# Activate all workflows via CLI
+n8n workflow:activate --all
+```
+
+## Structure
 
 ```
-n8n-ecom-video-workflows/
-├── workflows/
-│   └── main-process.example.json  # Workflow JSON example
-├── scripts/
-│   ├── storyboard_generator.py    # 6-grid storyboard
-│   └── kalodata_api.py            # Kalodata client
-└── docker-compose.yml             # n8n + PostgreSQL stack
+N8N-Ecom-Video-Workflows/
+├── workflows/          # 24 exported n8n workflow JSON files
+│   ├── 01-kalodata-fetch.json
+│   ├── 02-apify-download.json
+│   └── ...
+├── custom-nodes/       # Python scripts used in Function nodes
+├── docker-compose.yml
+└── .env.example
 ```
 
----
+## Requirements
 
-## 🔧 Tech Stack
-
-| Layer | Technology |
-|---|---|
-| Orchestration | n8n (self-hosted) |
-| Deploy | Docker Compose + PostgreSQL |
-| Helper scripts | Python 3.10+ |
-| LLM | Gemini 2.5 Pro |
-| Video download | Apify |
-| Output | Feishu Bitable |
-
----
-
-<div align="center">
-<sub>Showcase version · Production workflows not included · For portfolio reference only</sub>
-</div>
+- Docker and Docker Compose
+- n8n >= 1.30
+- Google Gemini API key
+- Kalodata account
+- Feishu app credentials
